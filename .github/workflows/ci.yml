@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install mlflow==2.19.0 docker
+          pip install mlflow==2.19.0
           pip install -r MLProject/requirements.txt
 
       - name: Run MLflow Project
@@ -50,13 +50,22 @@ jobs:
           path: MLProject/mlruns/
 
       - name: Build Docker Model
-        run: mlflow models build-docker -m "MLProject/mlruns/0/${{ steps.get_run_id.outputs.run_id }}/artifacts/model" -n credit-scoring-model --enable-mlserver
+        run: |
+          mlflow models build-docker \
+            -m "MLProject/mlruns/0/${{ steps.get_run_id.outputs.run_id }}/artifacts/model" \
+            -n credit-scoring-model \
+            --enable-mlserver
 
       - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login \
+            -u "${{ secrets.DOCKER_USERNAME }}" \
+            --password-stdin
 
       - name: Tag Docker Image
-        run: docker tag credit-scoring-model:latest ${{ secrets.DOCKER_USERNAME }}/credit-scoring-model:latest
+        run: |
+          docker tag credit-scoring-model:latest ${{ secrets.DOCKER_USERNAME }}/credit-scoring-model:latest
 
       - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/credit-scoring-model:latest
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/credit-scoring-model:latest
