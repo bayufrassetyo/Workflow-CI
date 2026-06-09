@@ -57,11 +57,12 @@ jobs:
           name: mlruns-artifacts
           path: MLProject/mlruns/
 
-      - name: Build Docker Model
+            - name: Build Docker Model
         run: |
           mlflow models build-docker \
             -m "${{ steps.find_model.outputs.model_path }}" \
-            -n credit-scoring-model
+            -n credit-scoring-model \
+            --env-manager=conda
 
       - name: Login to Docker Hub
         run: |
