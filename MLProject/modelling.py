@@ -52,7 +52,6 @@ def main():
         mlflow.sklearn.log_model(
             sk_model=model,
             artifact_path="model",
-            registered_model_name="credit-scoring-ci"
         )
 
         print("Training selesai.")
