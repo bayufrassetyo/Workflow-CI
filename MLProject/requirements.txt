@@ -1,8 +1,8 @@
 mlflow==2.19.0
-numpy==2.2.1
+numpy>=1.24.0,<2.3.0
 pandas
 scikit-learn==1.6.0
 matplotlib
 seaborn
-mlserver
-mlserver-mlflow
+mlserver==1.6.0
+mlserver-mlflow==1.6.0
