@@ -39,8 +39,9 @@ jobs:
         id: get_run_id
         shell: bash
         run: |
-          RUN_ID=$(find MLProject/mlruns -mindepth 2 -maxdepth 2 -type d | grep -v ".trash" | sort | tail -n 1 | xargs basename)
-          echo "RUN_ID=$RUN_ID"
+          # Mencari run_id langsung ke target lokasi yang tepat
+          RUN_ID=$(find MLProject/mlruns/0 -mindepth 1 -maxdepth 1 -type d | sort | tail -n 1 | xargs basename)
+          echo "Ditemukan RUN_ID: $RUN_ID"
           echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
 
       - name: Upload MLflow artifacts
@@ -54,13 +55,13 @@ jobs:
           mlflow models build-docker \
             -m "MLProject/mlruns/0/${{ steps.get_run_id.outputs.run_id }}/artifacts/model" \
             -n credit-scoring-model \
-            --enable-mlserver
+            ---enable-mlserver
 
       - name: Login to Docker Hub
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login \
             -u "${{ secrets.DOCKER_USERNAME }}" \
-            --password-stdin
+            -–password-stdin
 
       - name: Tag Docker Image
         run: |
