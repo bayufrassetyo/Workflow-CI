@@ -76,3 +76,13 @@ jobs:
       - name: Push Docker Image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/credit-scoring-model:latest
+
+      - name: Check logged model environment
+        run: |
+          echo "Model path: ${{ steps.find_model.outputs.model_path }}"
+          echo "===== python_env.yaml ====="
+          cat "${{ steps.find_model.outputs.model_path }}/python_env.yaml" || true
+          echo "===== conda.yaml ====="
+          cat "${{ steps.find_model.outputs.model_path }}/conda.yaml" || true
+          echo "===== requirements.txt ====="
+          cat "${{ steps.find_model.outputs.model_path }}/requirements.txt" || true

@@ -52,6 +52,14 @@ def main():
         mlflow.sklearn.log_model(
             sk_model=model,
             artifact_path="model",
+            conda_env="conda.yaml",
+            pip_requirements=[
+                "mlflow==2.19.0",
+                "numpy==2.2.1",
+                "pandas",
+                "scikit-learn==1.6.0",
+                "cloudpickle"
+            ]
         )
 
         print("Training selesai.")
