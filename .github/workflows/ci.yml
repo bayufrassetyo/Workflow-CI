@@ -61,8 +61,7 @@ jobs:
         run: |
           mlflow models build-docker \
             -m "${{ steps.find_model.outputs.model_path }}" \
-            -n credit-scoring-model \
-            --enable-mlserver
+            -n credit-scoring-model
 
       - name: Login to Docker Hub
         run: |
