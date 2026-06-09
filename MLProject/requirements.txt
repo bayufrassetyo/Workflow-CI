@@ -6,3 +6,4 @@ matplotlib
 seaborn
 mlserver
 mlserver-mlflow
+docker

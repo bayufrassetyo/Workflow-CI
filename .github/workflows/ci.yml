@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install mlflow==2.19.0
+          pip install mlflow==2.19.0 docker
           pip install -r MLProject/requirements.txt
 
       - name: Run MLflow Project
@@ -39,9 +39,8 @@ jobs:
         id: get_run_id
         shell: bash
         run: |
-          # Menggunakan skrip python pendek untuk mencari run_id terbaru agar tidak meleset
-          RUN_ID=$(python -c "import os; import glob; dirs = glob.glob('MLProject/mlruns/0/*'); dirs = [d for d in dirs if os.path.isdir(d) and not d.endswith('.trash')]; print(os.path.basename(max(dirs, key=os.path.getmtime)))")
-          echo "Ditemukan RUN_ID: $RUN_ID"
+          RUN_ID=$(find MLProject/mlruns -mindepth 2 -maxdepth 2 -type d | grep -v ".trash" | sort | tail -n 1 | xargs basename)
+          echo "RUN_ID=$RUN_ID"
           echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
 
       - name: Upload MLflow artifacts
