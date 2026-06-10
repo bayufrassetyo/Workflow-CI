@@ -68,13 +68,23 @@ jobs:
           path: MLProject/mlruns/
 
       - name: Build Docker Model
-        run: mlflow models build-docker -m "${{ steps.find_model.outputs.model_path }}" -n credit-scoring-model --enable-mlserver --env-manager local
+        run: |
+          mlflow models build-docker \
+            -m "${{ steps.find_model.outputs.model_path }}" \
+            -n credit-scoring-model \
+            --enable-mlserver \
+            --env-manager local
 
       - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login \
+            -u "${{ secrets.DOCKER_USERNAME }}" \
+            --password-stdin
 
       - name: Tag Docker Image
-        run: docker tag credit-scoring-model:latest ${{ secrets.DOCKER_USERNAME }}/credit-scoring-model:latest
+        run: |
+          docker tag credit-scoring-model:latest ${{ secrets.DOCKER_USERNAME }}/credit-scoring-model:latest
 
       - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/credit-scoring-model:latest
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/credit-scoring-model:latest
